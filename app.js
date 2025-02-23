@@ -58,7 +58,6 @@ app.get('/admin', async (req, res) => {
     res.render('order-summary', { orders });
 });
 
-/*
 //Define a "thank you" route
 app.post('/thankyou', (req, res) => {
 
@@ -74,36 +73,6 @@ app.post('/thankyou', (req, res) => {
     // Add the order to our array
     //orders.push(order);
     //console.log(orders);
-
-    // Send our thank you page
-    res.render('thankyou', { order });
-});
-*/
-
-//Define a "thank you" route
-app.post('/thankyou', async (req, res) => {
-
-    const order = {
-        fname: req.body.fname,
-        lname: req.body.lname,
-        email: req.body.email,
-        method: req.body.method,
-        toppings: req.body.toppings,
-        size: req.body.size
-    };
-
-    //Connect to the database
-    const conn = await connect();
-
-    //Query the database
-    const sql = 
-        `INSERT INTO orders (fname, lname, email, size, 
-            method, toppings)
-         VALUES ('${order.fname}', '${order.lname}', 
-         '${order.email}', '${order.size}', '${order.method}', 
-         '${order.toppings}')`;
-    console.log(sql);
-    const insert = await conn.query(sql);
 
     // Send our thank you page
     res.render('thankyou', { order });
