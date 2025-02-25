@@ -59,7 +59,7 @@ app.get('/admin', async (req, res) => {
 });
 
 //Define a "thank you" route
-app.post('/thankyou', (req, res) => {
+app.post('/thankyou', async (req, res) => {
 
     const order = {
         fname: req.body.fname,
@@ -70,10 +70,18 @@ app.post('/thankyou', (req, res) => {
         size: req.body.size
     };
 
-    // Add the order to our array
-    //orders.push(order);
-    //console.log(orders);
+    //Connect to the database
+    const conn = await connect();
 
+    // Add the order to our database
+    const insertQuery = await conn.query(`insert into orders 
+        (fname, lname, email, size, method, toppings)
+        values (?, ?, ?, ?, ?, ?)`,
+        [ order.fname, order.lname, order.email, order.size, 
+        order.method, order.toppings ]);
+
+    // INSERT INTO tbl (field1, field2) VALUES (?, ?)
+    
     // Send our thank you page
     res.render('thankyou', { order });
 });
