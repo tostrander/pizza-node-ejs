@@ -1,6 +1,7 @@
 //Import Libraries
 import express from 'express';
 import mariadb from 'mariadb';
+import { validateForm } from './services/validation.js';
 
 //Define our database credentials
 const pool = mariadb.createPool({
@@ -70,8 +71,24 @@ app.post('/thankyou', async (req, res) => {
         size: req.body.size
     };
 
+    const result = validateForm(order);
+    if (!result.isValid) {
+        console.log(result.errors);
+        res.send(result.errors);
+        return;
+    }
+
     //Connect to the database
     const conn = await connect();
+
+    //Convert toppings to a string
+    if (order.toppings) {
+        if (Array.isArray(order.toppings)) {
+            order.toppings = order.toppings.join(",");
+        }
+    } else {
+        order.toppings = "";
+    }
 
     // Add the order to our database
     const insertQuery = await conn.query(`insert into orders 
