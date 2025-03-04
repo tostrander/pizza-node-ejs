@@ -1,4 +1,4 @@
-export function validateForm(data) {
+export default function validateForm(data) {
     
     // Store all the validation errors in an array
     const errors = [ ];

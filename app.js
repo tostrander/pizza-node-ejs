@@ -1,7 +1,7 @@
 //Import Libraries
 import express from 'express';
 import mariadb from 'mariadb';
-import { validateForm } from './services/validation.js';
+import validateForm from './services/validation.js';
 
 //Define our database credentials
 const pool = mariadb.createPool({

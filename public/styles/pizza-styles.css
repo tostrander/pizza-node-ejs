@@ -93,3 +93,8 @@ label {
         width: 90%;
     }
 }
+
+.err {
+    color: darkred;
+    display: none;
+}

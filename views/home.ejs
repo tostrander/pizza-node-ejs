@@ -12,6 +12,9 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles/pizza-styles.css">
+
+    <!-- Script -->
+    <script src="scripts/client-validation.js" defer></script>
 </head>
 <body>
     <div id="main">
@@ -27,14 +30,15 @@
                action: where data will go
                method: how it will get there 
         -->
-        <form action="thankyou" method="post">
+        <form action="thankyou" method="post" id="pizza-form">
 
             <!-- Contact Info -->
             <fieldset>
                 <legend>Contact Info</legend>
 
                 <label>First Name:
-                    <input type="text" name="fname">
+                    <input type="text" name="fname" id="fname">
+                    <span class="err" id="err-fname">First name is required</span>
                 </label>
 
                 <label>Last Name:
