@@ -42,11 +42,13 @@
                 </label>
 
                 <label>Last Name:
-                    <input type="text" name="lname">
+                    <input type="text" name="lname" id="lname">
+                    <span class="err" id="err-lname">Last name is required</span>
                 </label>
 
                 <label>Email Address:
-                    <input type="text" name="email">
+                    <input type="text" name="email" id="email">
+                    <span class="err" id="err-email">Email is invalid</span>
                 </label>
 
             </fieldset>
@@ -62,6 +64,7 @@
                     <input type="radio" name="method"
                            value="delivery">Delivery
                 </label>
+                <span class="err" id="err-method">Please select pickup or delivery</span>
             </fieldset>
 
             <fieldset>
@@ -87,6 +90,7 @@
                     <option value="med">Medium</option>
                     <option value="large">Large</option>
                 </select>
+                <span class="err" id="err-size">Please select pickup or delivery</span>
             </fieldset>
 
             <!-- Place order button -->
