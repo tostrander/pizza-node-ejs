@@ -1,21 +1,22 @@
 //Import Libraries
 import express from 'express';
-import mariadb from 'mariadb';
+import pg from 'pg';
 import validateForm from './services/validation.js';
 
 //Define our database credentials
-const pool = mariadb.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'pizza',
-    port: '3306'
+const pool = new pg.Pool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '1234',
+    database: process.env.DB_NAME || 'pizza',
+    port: process.env.DB_PORT || 5432,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 //Define function to connect to the DB
 async function connect() {
     try {
-        const conn = await pool.getConnection();
+        const conn = await pool.connect();
         console.log('Connected to the database!')
         return conn;
     } catch (err) {
@@ -36,7 +37,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 //Define a port number for our server to listen on
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //Define a "default" route for our home page
 app.get('/', (req, res) => {
@@ -54,9 +55,12 @@ app.get('/admin', async (req, res) => {
     //Query the database
     const orders = await conn.query('SELECT * FROM orders')
 
-    console.log(orders);
+    console.log(orders.rows);
 
-    res.render('order-summary', { orders });
+    // Release the connection back to the pool
+    conn.release();
+
+    res.render('order-summary', { orders: orders.rows });
 });
 
 //Define a "thank you" route
@@ -91,11 +95,14 @@ app.post('/thankyou', async (req, res) => {
     }
 
     // Add the order to our database
-    const insertQuery = await conn.query(`insert into orders 
+    const insertQuery = await conn.query(`INSERT INTO orders 
         (fname, lname, email, size, method, toppings)
-        values (?, ?, ?, ?, ?, ?)`,
+        VALUES ($1, $2, $3, $4, $5, $6)`,
         [ order.fname, order.lname, order.email, order.size, 
         order.method, order.toppings ]);
+
+    // Release the connection back to the pool
+    conn.release();
 
     // INSERT INTO tbl (field1, field2) VALUES (?, ?)
     
